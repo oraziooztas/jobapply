@@ -6,3 +6,25 @@ node_modules/
 *.log
 *.tsbuildinfo
 next-env.d.ts
+
+# ---------------------------------------------------------------------------
+# Personal job-search material. THIS REPO IS PUBLIC.
+#
+# Added 2026-08-08. The working tree held CVs, cover letters, resumes, company
+# research and career tooling as untracked files: a single `git add -A` would
+# have published an entire job search. Nothing personal had ever been committed
+# (verified against the full history), so this is prevention, not cleanup.
+#
+# Before removing any line here, ask what a recruiter reading this repo would
+# learn that you did not choose to tell them.
+# ---------------------------------------------------------------------------
+CV_*.pdf
+CV_*.md
+cover_letters/
+resume/
+career-ops/
+SESSION_CHECKPOINT.md
+guida_invio_candidature.md
+guida_wave6.md
+linkedin_job_alerts_guide.md
+ricerca_aziende_ai_italia.md

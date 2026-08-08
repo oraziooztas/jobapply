@@ -30,3 +30,140 @@ Log cronologico di decisioni, problemi e lezioni per questo progetto.
 - Decidere il formato: estensione browser o app web
 - Definire il modello di monetizzazione (freemium/subscription/lifetime)
 - Scrivere SPEC.md completo prima di iniziare lo sviluppo
+
+---
+
+## [2026-02-21] — Wave 1+2 candidature inviate
+
+**Cosa fatto:**
+- Ricerca 28+ aziende AI (Italia + internazionali), organizzate in 4 tier
+- CV creato in 3 versioni (Tech EN, Tech IT, Research EN), PDF pronti
+- 16 cover letter scritte (.md + .pdf) — 3 template: A (AI Agent), B (Foundation Model), C (NLP Italia)
+- Wave 1+2: 9/9 candidature inviate (Mistral, DeepL, Translated, Aleph Alpha, DeepMind, Synthesia, Stability, Adept, Onfido)
+- LinkedIn: 6 job alert + 7 aziende seguite + headline aggiornata
+- Guida operativa `guida_invio_candidature.md` con istruzioni per-azienda
+
+**Problemi incontrati:**
+- Playwright non funziona (conflitto Chrome) — tutto fatto via Safari manuale
+- CRIF vecchia posizione (602658201) chiusa, trovata nuova (943951201)
+
+---
+
+## [2026-02-22] — Wave 3 email + fix contatti
+
+**Cosa fatto:**
+- Preparati 3 testi email copia-incolla per Aindo, Interactive Media, FBK
+- Trovato contatto FBK: Dr. Luisa Bentivogli (head HLT-NLP)
+- Scoperto che 2/3 email rimbalzate: career@aindo.com e bentivogli@fbk.eu inesistenti
+- Ricercati indirizzi corretti: Aindo = careers@aindo.com (con la s) o form su aindo.com/careers; FBK = bentivo@fbk.eu
+- Interactive Media inviata con successo a info-web@imnet.com
+
+**Lezioni apprese:**
+- Verificare SEMPRE le email prima di preparare i testi (career vs careers, formato cognome FBK abbreviato)
+- FBK usa formato abbreviato: bentivo@fbk.eu, non bentivogli@fbk.eu
+
+**Prossimi passi:**
+- Re-inviare Aindo (careers@aindo.com) e FBK (bentivo@fbk.eu) con indirizzi corretti
+- Completare Wave 3 form: CRIF (SuccessFactors), expert.ai, Domyn (Workable)
+- Candidatura LinkedIn: Skillvue
+- Scrivere cover letter Tier 2: Cohere, Hugging Face, Sierra AI, Harvey AI (deadline 23-28 Feb)
+
+---
+
+## [2026-02-25] — 7 candidature inviate (sessione serale), md_to_pdf.py creato
+
+**Cosa fatto:**
+- Ricerca 15 nuove aziende (italiane + internazionali)
+- Scritte 15 cover letter con regole /human-writer, PDF generati
+- Creato md_to_pdf.py per PDF ben formattati via HTML+CSS (sostituisce weasyprint diretto)
+- Inviate: Musixmatch, Contents.com, NAVER Labs Europe, Domyn, Altilia, Kineton, Thomson Reuters (Applied Scientist NLP/GenAI)
+- Skippate 11 aziende per: vincoli location (Anthropic, Rasa), portali rotti (Exprivia, Cy4Gate), niente posizioni (Unbabel, Helsing, Jina), profilo non adatto (Booking, Deda), no spontanea (Textkernel), duplicato (iGenius=Domyn)
+
+**Lezioni apprese:**
+- Molte aziende internazionali richiedono work authorization locale — verificare PRIMA di scrivere cover letter
+- weasyprint su .md puro rende male — sempre usare md_to_pdf.py via HTML
+
+---
+
+## [2026-02-25] — Musixmatch + Contents.com inviate, skill /human-writer creata
+
+**Cosa fatto:**
+- Rimosso progetto "Ralph" da CV Desktop (non era suo) — creati template Typst (CV_desktop_EN.typ, CV_desktop_IT.typ)
+- Ricerca 8 aziende italiane NLP-aligned: Musixmatch, Volta, Neodata, Contents.com, Normo.ai, Clearbox AI, ItaliaNLP CNR, MilaNLP Bocconi
+- Scritte 8 cover letter con PDF
+- Creata skill /human-writer per documenti anti-AI-detection (no bold, no markdown headers, tono naturale)
+- Riscritte tutte le 8 cover letter con regole human-writer
+- Inviate: Musixmatch (Lever), Contents.com (careers page)
+- Scartate dall'utente: Neodata, Clearbox, ItaliaNLP CNR, MilaNLP Bocconi
+
+**Problemi incontrati:**
+- Cover letter iniziali troppo "AI-generated" (em dashes, bold, headers markdown) — risolto con skill dedicata
+
+**Prossimi passi:**
+- Valutare Normo.ai e Volta Software (cover letter pronte)
+- Monitorare risposte Musixmatch e Contents.com
+
+---
+
+## [2026-04-09] — Fork career-ops + setup automazione NLP/Ling
+
+**Cosa fatto:**
+- Fork di `santifer/career-ops` → `oraziooztas/career-ops` clonato in `jobapply/career-ops/`
+- **Playwright FIXED**: `npx playwright install chromium` risolve il conflitto Chrome storico (ora usa Chromium headless isolato in `~/Library/Caches/ms-playwright/`)
+- Import asset esistenti: CV copiato in `cv.md`, 44 candidature legacy (Wave 1-6) migrate in `data/applications.md`, dedup ledger `scan-history.tsv` seedato
+- `config/profile.yml` custom: archetype NLP/Ling (NON CS), exclusions anti-CS-degree, bilingue IT/EN con auto-detect JD, scoring weights custom (linguistic_fit +5, hard_cs_requirement -5)
+- `modes/_profile.md` custom: 7 archetype Orazio-specific (NLP Engineer, Computational Linguist, Applied AI/Claude, Research Assistant, Prompt Engineer, MT/Voice, Digital Humanities) con framing + proof point mapping
+- `modes/cover-letter.md` nuovo mode custom bilingue con regole human-writer (anti-AI-detection)
+- `portals.yml` riscritto: 40+ aziende IT/EU NLP-friendly (Babelscape, Almawave, FBK, CNR-ILC, IIT, MilaNLP, Translated, Musixmatch, DeepL, Aleph Alpha, Mistral, Hugging Face, Speechmatics, Causaly ecc.). US/UK/CH disabilitate di default per vincolo visa.
+- Spostato tracker: `04_DOCUMENTI/CV/application_tracker.md` → symlink verso `career-ops/data/applications.md`. Backup legacy salvato come `.legacy-2026-02-27.bak`.
+- Aggiornato MAP.md con nuova struttura career-ops
+
+**Decisioni prese:**
+- Fork invece di clone → customizzazioni restano upstreamabili come PR
+- Bilingue IT+EN con auto-detect dalla lingua JD (non hardcoded)
+- Archetype completamente riscritti (quelli default di Career Ops sono US tech-heavy, sbagliati per profilo linguistico)
+- Hard exclusions: Pure SWE, DevOps, SRE, Mobile Dev, Embedded, Blockchain
+- Tracker single-source-of-truth in `career-ops/data/applications.md`, vecchio path diventa symlink retrocompat
+- Webapp Next.js (`webapp/`) DEPRECATED — career-ops copre tutti i use case della spec
+
+**Problemi risolti:**
+- Playwright/Chrome conflict storico → Chromium headless isolato
+- Archetype generici Career Ops → riscritti per profilo NLP/Ling
+
+**Rischi aperti:**
+- Mode `modes/it/` non tradotti completamente (solo cover-letter è bilingue) → se arriva un update upstream potrebbe esserci merge conflict
+- Scoring weights custom non testati E2E ancora (serve prima run reale)
+- Aziende US/UK/CH hardcoded come disabled: perdiamo remote EU legit da aziende con HQ lì (es. Cohere ha remote EU)
+
+**Prossimi passi:**
+1. **Test E2E**: eseguire `claude` dalla cartella `career-ops/` → onboarding wizard → paste 1 URL reale
+2. Far girare `/career-ops scan` sulle aziende tracked per trovare nuove posizioni
+3. Valutare se tradurre `modes/` in italiano (modes/it/) o lasciare solo EN
+4. Re-inviare Aindo (careers@aindo.com) e FBK (bentivo@fbk.eu) via career-ops con cover letter nuove
+
+---
+
+## [2026-02-25] — Accenture inviata + Leonardo/Wellnet skip + Lexroom rifiutata
+
+**Cosa fatto:**
+- Lexroom: prima risposta negativa ricevuta — tracking aggiornato
+- Generati PDF cover letter (pandoc+weasyprint) per Leonardo, Wellnet, Accenture
+- Leonardo Workday: 0 posizioni AI/NLP internship allineate — SKIP
+- Wellnet: link posizione 404, anche /job-opportunities/ morto — SKIP
+- Accenture: cover letter riadattata da "Stage Data & AI" a "Prompt Engineer", PDF rigenerato, candidatura inviata via accenture.com/it-it/careers
+
+**Problemi incontrati:**
+- Workday links diretti (Leonardo, Accenture) non aprono in Safari — usato portale principale
+- Wellnet: posizione rimossa senza preavviso
+
+**Prossimi passi:**
+- Valutare nuove posizioni: G-Research (Londra), Fraunhofer Italia (Bolzano), PwC (Milano)
+- Riprovare CRIF, expert.ai, Domyn, Skillvue se tempo disponibile
+
+## [2026-07-18] — CV ATS/AIEvals v2 (airesume) + asset web
+
+**Cosa fatto:**
+- `resume/CV_Orazio_Oztas_AIEvals_ATS_EN.pdf` (1 pagina A4, Helvetica, legature OFF per parsing ATS) generato via HTML + Chrome headless; sorgente autorevole in `_source.md` (il `.md` senza suffisso e' l'estrazione automatica pdf2md, puo' essere stale)
+- Contenuto: resume Notion AIEvals aggiornato con agent-failure-eval-bench (claim safe: eval design + benchmark hygiene), vault 2.300+, contatti reali, tutor Compiti@Casa come voce separata (2026, non sotto BA)
+- Stile AI-ese intenzionale (skill airesume, self-preference bias); per lettori umani/startup piccole usare l'approccio human-writer
+- Contesto: web CV live su oraziooztas.github.io/cv (repo oraziooztas/cv, sorgente in 01_PROGETTI/landing-portfolio/web-cv)
