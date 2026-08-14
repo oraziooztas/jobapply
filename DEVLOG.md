@@ -167,3 +167,53 @@ Log cronologico di decisioni, problemi e lezioni per questo progetto.
 - Contenuto: resume Notion AIEvals aggiornato con agent-failure-eval-bench (claim safe: eval design + benchmark hygiene), vault 2.300+, contatti reali, tutor Compiti@Casa come voce separata (2026, non sotto BA)
 - Stile AI-ese intenzionale (skill airesume, self-preference bias); per lettori umani/startup piccole usare l'approccio human-writer
 - Contesto: web CV live su oraziooztas.github.io/cv (repo oraziooztas/cv, sorgente in 01_PROGETTI/landing-portfolio/web-cv)
+
+---
+
+## [2026-08-14] — webapp esce dal gitlink orfano, il repo pubblico contiene finalmente l'app
+
+**Il difetto.** `webapp/` era un gitlink (mode 160000) senza `.gitmodules`, e
+il repo interno non aveva remote: chi clonava `oraziooztas/jobapply` trovava
+una directory che git non poteva risolvere e nessun modo di recuperarla. In più
+il puntatore era *stale* — il gitlink stava a `8a66377` mentre il repo interno
+era già a `a231971`, da cui il ` M webapp` permanente in `git status`. Sul lato
+pubblico: 5 KB, `language: null`, mentre il README prometteva Next.js 16,
+Supabase, Clerk, OpenAI e Playwright. Segnalato dall'audit dell'08/08, che per
+questo aveva **sospeso jobapply dalla CV-safe list**.
+
+**Cosa è stato fatto, e perché non è un semplice `rm -rf webapp/.git`.** La
+storia interna (2 commit) è stata trasferita nel repo esterno con un
+subtree-merge fatto a mano, non buttata via:
+
+```bash
+git rm --cached webapp && git commit          # via il gitlink
+git remote add webapp-src "$PWD/webapp" && git fetch webapp-src
+git merge -s ours --no-commit --allow-unrelated-histories webapp-src/main
+git read-tree --prefix=webapp/                 webapp-src/main   # niente -u
+git commit && git remote remove webapp-src
+```
+
+`read-tree` **senza `-u`** è il punto: i file erano già sul disco e identici
+all'albero committato, quindi si aggiorna solo l'indice e il working tree non
+viene toccato. Con `-u` git si sarebbe fermato su «untracked working tree file
+would be overwritten». Il merge `e32d9c1` ha due genitori: `46ae2e6` e
+`a231971`, quindi `8a66377` e `a231971` restano raggiungibili per sempre. Il
+`.git` interno non è stato cancellato ma spostato, e ne esiste un
+`git bundle --all` di backup.
+
+**Verifica, fatta come la fa un recruiter e non come la fa l'autore.** Clone
+anonimo da GitHub: 41 file sotto `webapp/`, 800 KB totali, ~2.300 righe fra
+TS/TSX/SQL/CSS, 7 API route implementate (78-166 righe l'una), `page.tsx` da
+790. Le dipendenze coprono tutto quello che il README dichiara — `openai`,
+`pdf-parse`, `playwright`, `react-hook-form`, `@supabase/supabase-js`,
+`@clerk/nextjs`. Scan segreti sul diff pushato: 0 match, `.env.local.example`
+porta solo placeholder.
+
+⚠️ **Il campo `.size` dell'API GitHub è rimasto a 5 KB anche dopo il push**
+(`language` invece è passato a `TypeScript`): si aggiorna con ritardo. Vale il
+clone, non il campo — l'audit dell'08/08 aveva usato proprio quel campo come
+prova.
+
+**Stato CV.** Riammesso in CV-safe list il 14/08. Claim consentito: app
+full-stack Next.js/Supabase/Clerk. Non è deployata e non ha utenti: non si cita
+come prodotto in uso.
