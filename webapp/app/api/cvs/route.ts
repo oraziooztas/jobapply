@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getAuth } from '@clerk/nextjs/server'
 import { supabase } from '@/lib/supabase/client'
-import pdf from 'pdf-parse'
+import { PDFParse } from 'pdf-parse'
 
 export async function POST(req: NextRequest) {
   try {
@@ -20,9 +20,14 @@ export async function POST(req: NextRequest) {
     const bytes = await file.arrayBuffer()
     const buffer = Buffer.from(bytes)
 
-    // Extract text from PDF
-    const data = await pdf(buffer)
-    const content = data.text
+    // Extract text from PDF (pdf-parse v2: class API, the v1 default export is gone)
+    const parser = new PDFParse({ data: buffer })
+    let content: string
+    try {
+      content = (await parser.getText()).text
+    } finally {
+      await parser.destroy()
+    }
 
     // Extract basic skills (simple keyword matching)
     const commonSkills = [

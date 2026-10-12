@@ -110,13 +110,15 @@ export async function GET(req: NextRequest) {
   }
 }
 
-function calculateMatchScore(cv: any, jobDescription: string): number {
-  if (!cv.skills || !Array.isArray(cv.skills)) {
+type CvForMatching = { skills?: unknown; content?: string | null }
+
+function calculateMatchScore(cv: CvForMatching, jobDescription: string): number {
+  if (!Array.isArray(cv.skills)) {
     return 50
   }
 
   const lowerJobDesc = jobDescription.toLowerCase()
-  const cvSkills = cv.skills.map((s: string) => s.toLowerCase())
+  const cvSkills = cv.skills.map((s) => String(s).toLowerCase())
 
   // Count how many CV skills are mentioned in job description
   let matchedSkills = 0

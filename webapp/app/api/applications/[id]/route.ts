@@ -4,9 +4,10 @@ import { supabase } from '@/lib/supabase/client'
 
 export async function PATCH(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     const { userId } = getAuth(req)
     if (!userId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
@@ -35,7 +36,7 @@ export async function PATCH(
         ...(notes !== undefined && { notes }),
         updated_at: new Date().toISOString()
       })
-      .eq('id', params.id)
+      .eq('id', id)
       .eq('user_id', userData.id)
       .select()
       .single()
@@ -57,9 +58,10 @@ export async function PATCH(
 
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     const { userId } = getAuth(req)
     if (!userId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
@@ -78,7 +80,7 @@ export async function DELETE(
     const { error } = await supabase
       .from('applications')
       .delete()
-      .eq('id', params.id)
+      .eq('id', id)
       .eq('user_id', userData.id)
 
     if (error) {

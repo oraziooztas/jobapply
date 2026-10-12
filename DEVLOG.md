@@ -217,3 +217,18 @@ prova.
 **Stato CV.** Riammesso in CV-safe list il 14/08. Claim consentito: app
 full-stack Next.js/Supabase/Clerk. Non è deployata e non ha utenti: non si cita
 come prodotto in uso.
+
+
+## [2026-10-12] — `main` non compilava: tre fix e build verde (AFK)
+
+**Trovato** clonando il repo pubblico da anonimo e facendo `npm ci` + `next build`: `main` falliva (exit 1). Il 14/08 il riammesso in CV-safe list aveva verificato che i file c'erano, non che compilassero.
+
+**Fix:**
+- `app/api/cvs/route.ts`: il lockfile installa `pdf-parse` 2.4.5, ma il codice usava l'API v1 (`import pdf from 'pdf-parse'`, che in v2 non ha default export). Ora `new PDFParse({ data })` + `getText()` + `destroy()`.
+- `app/api/applications/[id]/route.ts`: da Next 15 `params` è una `Promise`; gli handler PATCH e DELETE la dichiaravano come oggetto e il type-check di `next build` falliva.
+- `components/providers.tsx`: un componente client chiamava l'API backend di Clerk con `CLERK_SECRET_KEY`, che nel browser non esiste (e renderla pubblica avrebbe esposto il segreto). La sync passa a `app/api/users/sync/route.ts` lato server, con `currentUser()` e upsert su `clerk_id` (UNIQUE nello schema).
+- `app/api/job-matches/route.ts`: tipo esplicito al posto di `any`.
+
+**Verifica:** `tsc --noEmit` exit 0; ESLint 0 errori (da 2), 11 warning (da 14); `next build` exit 0 nel clone pulito, con variabili d'ambiente fittizie. Il comportamento a runtime (upload PDF, sync utente) **non è verificato**: serve un progetto Supabase e Clerk veri.
+
+**Nota locale:** in questa copia `node_modules/pdf-parse` è incompleto (manca `ScreenshotResult.js`, presente con `npm ci`): prima di un build locale serve `npm ci`.
